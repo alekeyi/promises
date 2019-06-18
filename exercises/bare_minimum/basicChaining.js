@@ -10,11 +10,22 @@
 
 var fs = require('fs');
 var Promise = require('bluebird');
-
+Promise.promisifyAll(fs);
 
 
 var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
   // TODO
+  return new Promise((resolve, reject) => {
+    fs.readFileAsync(readFilePath, 'utf8').then((data) => {
+      var firstLine = data.split('\n')[0];
+      console.log("First line within first dot then", firstLine);
+    }).then((firstLine) => {
+      console.log("First Line within second dot then", firstLine);
+      resolve(fs.writeFileAsync(writeFilePath, firstLine, 'utf8'));
+    }).catch((err) => {
+        reject(err);
+    });
+  });
 };
 
 // Export these functions so we can test them
